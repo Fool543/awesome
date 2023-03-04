@@ -1,6 +1,6 @@
 
-sudo rm /etc/dnf/dnf.conf \
-sudo cp dnf.conf /etc/dnf/dnf.conf \
+#sudo rm /etc/dnf/dnf.conf \
+#sudo cp dnf.conf /etc/dnf/dnf.conf \
 sudo dnf update \
 sudo dnf install @base-x xfce4-terminal rofi picom thunar chromium vim awesome arandr nitrogen xmobar lxappearance lxsession fira-code-fonts \
 mkdir ~/.config/awesome \
