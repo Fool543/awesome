@@ -1,4 +1,4 @@
-# awesome-fedora
+# awesome
 
-gtk-theme = dracula 
-icon theme = flat remix
+//gtk-theme = dracula 
+//icon theme = flat remix
