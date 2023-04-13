@@ -125,7 +125,7 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 
 -- {{{ Wibar
 -- Create a textclock widget
-mytextclock = wibox.widget.textclock(" %I:%M %p   %d %b ", 60)
+mytextclock = wibox.widget.textclock('<span color="#89b4fa">  %I:%M %p   %d %b </span>', 60)
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -190,7 +190,7 @@ awful.screen.connect_for_each_screen(function(s)
 	set_wallpaper(s)
 
 	-- Each screen has its own tag table.
-	local names = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
+	local names = { "MAIN", "WWW", "DEV", "VBOX", "MUS", "SYS", "DOC", "VID", "CHAT" }
 	local l = awful.layout.suit -- Just to save some typing: use an alias.
 	local layouts = { l.floating, l.tile, l.floating, l.fair, l.max, l.floating, l.tile.left, l.floating, l.floating }
 	awful.tag(names, s, awful.layout.layouts[1])
@@ -215,29 +215,90 @@ awful.screen.connect_for_each_screen(function(s)
 		end)
 	))
 	-- Create a taglist widget
+	--s.mytaglist = awful.widget.taglist({
+	--	screen = s,
+	--	filter = awful.widget.taglist.filter.all,
+	--	buttons = taglist_buttons,
+	--	style = {
+	--		shape_border_width = 0,
+	--		shape_border_color = "#777777",
+	--		shape = gears.shape.rounded_bar,
+	--	},
+	--	layout = {
+	--		spacing = 5,
+	--		spacing_widget = {
+	--			{
+	--				forced_width = 0,
+	--				--shape = gears.shape.circle,
+	--				widget = wibox.widget.separator,
+	--			},
+	--			valign = "center",
+	--		halign = "center",
+	--			widget = wibox.container.place,
+	--		},
+	--		layout = wibox.layout.flex.horizontal,
+	--	},
+	--})
+
+	local new_shape = function(cr, width, height, tl, tr, br, bl, rad)
+		gears.shape.partially_rounded_rect(cr, 35, 0, true, false, true, false, 5000)
+	end
 	s.mytaglist = awful.widget.taglist({
 		screen = s,
 		filter = awful.widget.taglist.filter.all,
-		buttons = taglist_buttons,
 		style = {
-			shape_border_width = 0,
-			shape_border_color = "#777777",
-			shape = gears.shape.rounded_bar,
+			shape = new_shape,
 		},
 		layout = {
-			spacing = 5,
-			spacing_widget = {
-				{
-					forced_width = 0,
-					--shape = gears.shape.circle,
-					widget = wibox.widget.separator,
-				},
-				valign = "center",
-				halign = "center",
-				widget = wibox.container.place,
-			},
-			layout = wibox.layout.flex.horizontal,
+			spacing = 0,
+
+			layout = wibox.layout.fixed.horizontal,
 		},
+		widget_template = {
+			{
+				{
+					{
+						{
+							{
+								id = "index_role",
+								widget = wibox.widget.textbox,
+							},
+							margins = 0,
+							widget = wibox.container.margin,
+						},
+						bg = "#0000000",
+						shape = gears.shape.circle,
+						widget = wibox.container.background,
+					},
+					{
+						{
+							id = "icon_role",
+							widget = wibox.widget.imagebox,
+						},
+						margins = 0,
+						widget = wibox.container.margin,
+					},
+					{
+						id = "text_role",
+						widget = wibox.widget.textbox,
+					},
+					layout = wibox.layout.fixed.horizontal,
+				},
+				left = 5,
+				right = 5,
+				widget = wibox.container.margin,
+			},
+			id = "background_role",
+			widget = wibox.container.background,
+			-- Add support for hover colors and an index label
+			-- create_callback = function(self, c3, index, objects) --luacheck: no unused args
+			--   self:get_children_by_id('index_role')[1].markup = '<b> '..index..' </b>'
+			--             end,
+			--  update_callback = function(self, c3, index, objects) --luacheck: no unused args
+			--    self:get_children_by_id('index_role')[1].markup = '<b> '..index..' </b>'
+			-- end,
+		},
+		buttons = taglist_buttons,
 	})
 
 	s.mytasklist = awful.widget.tasklist({
@@ -305,22 +366,32 @@ awful.screen.connect_for_each_screen(function(s)
 		position = "top",
 		screen = s,
 		height = 22,
-		opacity = 0.6,
+		opacity = 0.8,
 	})
 
 	-- Systray
 	mytray = wibox.widget.systray()
-	mytray:set_base_size()
+	mytray:set_base_size(12)
 	beautiful.systray_icon_spacing = "4"
+	mytray_m = wibox.layout.margin(wibox.widget.systray(), 10, 10, 5, 3)
 
 	-- Volume Icon
 	volumecfg = volume_control({})
 
 	-- Custom Text Boxes
-	vol = wibox.widget.textbox()
-	vol.text = "VOL"
-	sep = wibox.widget.textbox()
-	sep.text = "| "
+
+	vol = wibox.widget({
+		markup = '<span color="#fab387">VOL</span>',
+		align = "center",
+		valign = "center",
+		widget = wibox.widget.textbox,
+	})
+	sep = wibox.widget({
+		markup = '<span color="#ffffff">| </span>',
+		align = "center",
+		valign = "center",
+		widget = wibox.widget.textbox,
+	})
 
 	-- Add widgets to the wibox
 	s.mywibox:setup({
@@ -335,7 +406,6 @@ awful.screen.connect_for_each_screen(function(s)
 		{ -- Right widgets
 			layout = wibox.layout.fixed.horizontal,
 			--mykeyboardlayout,
-			mytray,
 			sep,
 			vol,
 			volumecfg.widget,
@@ -343,6 +413,7 @@ awful.screen.connect_for_each_screen(function(s)
 			mytextclock,
 			sep,
 			s.mylayoutbox,
+			mytray_m,
 		},
 	})
 end)
@@ -398,13 +469,13 @@ globalkeys = gears.table.join(
 
 	-- Custom Keys
 	awful.key({ modkey }, "b", function()
-		awful.spawn("brave")
+		awful.spawn("brave-browser")
 	end, { description = "open a browser", group = "applications" }),
 	awful.key({ modkey }, "f", function()
 		awful.spawn("pcmanfm")
 	end, { description = "open a file manager", group = "applications" }),
 	awful.key({ modkey }, "d", function()
-		awful.spawn("rofi -show drun -config /home/ard/.config/rofi/launchers/type-4/style-10.rasi")
+		awful.spawn("/home/ard/.config/rofi/launchers/type-4/launcher.sh")
 	end, { description = "open a launcher", group = "applications" }),
 	awful.key({ modkey }, "e", function()
 		awful.spawn.with_shell("~/.config/rofi/powermenu/type-2/powermenu.sh")
@@ -626,6 +697,7 @@ awful.rules.rules = {
 				"Gpick",
 				"Kruler",
 				"Viewnior",
+				"Protonvpn",
 				"Nitrogen",
 				"Lxappearance",
 				"MessageWin", -- kalarm.
@@ -744,7 +816,7 @@ run_once({ "nm-applet" })
 run_once({ "gnome-keyring" })
 run_once({ "copyq" })
 run_once({ "picom -b" })
-run_once({ "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1" })
+run_once({ "/usr/libexec/polkit-gnome-authentication-agent-1" })
 awful.spawn("nitrogen --restore")
 awful.spawn.with_shell("/home/ard/.config/awesome/xdg.sh")
 --run_once({

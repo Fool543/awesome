@@ -10,20 +10,22 @@ local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
 
 local theme = {}
-local background = "/usr/share/backgrounds/"
+local bg_usr = "/usr/share/backgrounds/"
+local bg_aw = "/home/ard/.config/awesome/"
 
 theme.font = "CaskayDiaCove NF Bold 9"
 
-theme.bg_normal = "#222222"
+theme.bg_normal = "#1e1e2e"
 theme.bg_focus = "#535d6c"
 theme.bg_urgent = "#ff0000"
-theme.bg_minimize = "#444444"
+theme.bg_minimize = "#2c2e4a"
 theme.bg_systray = theme.bg_normal
 
-theme.fg_normal = "#aaaaaa"
+theme.fg_normal = "#7f849c"
 theme.fg_focus = "#ffffff"
 theme.fg_urgent = "#ffffff"
 theme.fg_minimize = "#ffffff"
+theme.fg_systray = "#ffffff"
 
 theme.useless_gap = dpi(4)
 theme.border_width = dpi(1)
@@ -94,7 +96,7 @@ theme.titlebar_maximized_button_focus_inactive = themes_path .. "default/titleba
 theme.titlebar_maximized_button_normal_active = themes_path .. "default/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active = themes_path .. "default/titlebar/maximized_focus_active.png"
 
---theme.wallpaper = background .. "/archlinux-login-backgrounds/att-02.jpg"
+--theme.wallpaper = bg_aw .. "/att-02.jpg"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path .. "default/layouts/fairhw.png"
@@ -113,6 +115,9 @@ theme.layout_cornernw = themes_path .. "default/layouts/cornernww.png"
 theme.layout_cornerne = themes_path .. "default/layouts/cornernew.png"
 theme.layout_cornersw = themes_path .. "default/layouts/cornersww.png"
 theme.layout_cornerse = themes_path .. "default/layouts/cornersew.png"
+
+-- Custom
+theme.taglist_font = "CaskayDiaCove NF BOLD 8"
 
 -- Generate Awesome icon:
 theme.awesome_icon = theme_assets.awesome_icon(theme.menu_height, theme.bg_focus, theme.fg_focus)
